@@ -51,7 +51,7 @@ module.exports = {
             // command. Default arguments are `--verbose`.
             args: '',
             // Default arguments are `--typescript --target browser --mode normal`.
-            extraArgs: '--no-typescript -- --features webgl2',
+            extraArgs: '--no-typescript --target web -- --features webgl2',
 
             // Optional array of absolute paths to directories, changes to which
             // will trigger the build.
@@ -78,7 +78,7 @@ module.exports = {
             //
             // the mode `development` makes `wasm-pack` build in `debug` mode.
             // the mode `production` makes `wasm-pack` build in `release` mode.
-            forceMode: "development",
+            forceMode: "production",
 
             // Controls plugin output verbosity, either 'info' or 'error'.
             // Defaults to 'info'.
@@ -96,7 +96,13 @@ module.exports = {
         //new VueLoaderPlugin()
     ],
     devServer: {
-        static: 'examples'
+        static: 'examples',
+        headers: [
+            { key: "Cross-Origin-Embedder-Policy", value: "require-corp" },
+            { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
+            //{ key: "Cross-Origin-Resource-Policy", value: "cross-origin" },
+            //{ key: "Cross-Origin-Resource-Policy", value: "same-site" }
+        ]
     },
     module: {
         rules: [
@@ -143,6 +149,6 @@ module.exports = {
         ],
     },
     //mode: 'development',
-    mode: 'development',
+    mode: 'production',
     //devtool: 'source-map'
 };

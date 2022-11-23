@@ -30,6 +30,8 @@
  * 
  *****************************************************************************/
 
+ import $ from "jquery";
+
 export let MeasurementTable = (function() {
 
 

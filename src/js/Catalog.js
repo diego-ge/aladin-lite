@@ -36,6 +36,7 @@ import { CooFrameEnum } from "./CooFrameEnum.js";
 import { Utils } from "./Utils.js";
 import { AladinUtils } from "./AladinUtils.js";
 import { Coo } from "./libs/astro/coo.js";
+import $ from "jquery";
 
 // TODO : harmoniser parsing avec classe ProgressiveCat
 export let Catalog = (function() {

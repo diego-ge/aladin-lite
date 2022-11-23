@@ -29,6 +29,8 @@
  *****************************************************************************/
 
 import { Utils } from "./Utils.js";
+import $ from "jquery";
+
 
 export let HiPSDefinition = (function() {
 
@@ -618,7 +620,7 @@ export let HiPSDefinition = (function() {
 
 
 
-    HiPSDefinition.init();
+    //HiPSDefinition.init();
 
     return HiPSDefinition;
 

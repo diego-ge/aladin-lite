@@ -1,6 +1,7 @@
 use wasm_bindgen::prelude::wasm_bindgen;
+use wasm_bindgen::JsValue;
 
-use super::color::{Color, ColorRGB};
+use super::color::ColorRGB;
 
 #[derive(Clone, Debug)]
 #[wasm_bindgen]
@@ -17,8 +18,7 @@ use crate::Abort;
 #[wasm_bindgen]
 impl MOC {
     #[wasm_bindgen(constructor)]
-    pub fn new(uuid: String, opacity: f32, line_width: f32, is_showing: bool, hex_color: String, adaptative_display: bool) -> Self {
-        let color = Color::hexToRgb(hex_color);
+    pub fn new(uuid: String, opacity: f32, line_width: f32, is_showing: bool, color: JsValue, adaptative_display: bool) -> Self {
         let color = color.try_into().unwrap_abort();
         Self {
             uuid,

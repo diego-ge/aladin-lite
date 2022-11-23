@@ -48,13 +48,14 @@ import { HpxImageSurvey } from "./HpxImageSurvey.js";
 import { Coo } from "./libs/astro/coo.js";
 import { CooConversion } from "./CooConversion.js";
 import { URLBuilder } from "./URLBuilder.js";
-import { HiPSDefinition } from "./HiPSDefinition.js";
+//import { HiPSDefinition } from "./HiPSDefinition.js";
 import { AladinLogo } from "./gui/AladinLogo.js";
 import { ProjectionSelector } from "./gui/ProjectionSelector";
 import { Stack } from "./gui/Stack.js";
 import { CooGrid } from "./gui/CooGrid.js";
 import { ALEvent } from "./events/ALEvent.js";
 import { Color } from './Color.js';
+import $ from "jquery";
 
 // Import aladin css inside the project
 import './../css/aladin.css';
@@ -341,27 +342,21 @@ export let Aladin = (function () {
         // For that we check the survey key of options
         // It can be given as a single string or an array of strings
         // for multiple blending surveys
-        if (options.survey) {
-            if (Array.isArray(options.survey)) {
-
-                let i = 0;
-                options.survey.forEach((rootURLOrId) => {
-                    if (i == 0) {
-                        this.setBaseImageLayer(rootURLOrId);
-                    } else {
-                        this.setOverlayImageLayer(rootURLOrId, Utils.uuidv4());
-                    }
-                    i++;
-                });
-            } else {
-                this.setBaseImageLayer(options.survey);
-            }
+        // Option.survey is mandatory here
+        if (Array.isArray(options.survey)) {
+            let i = 0;
+            options.survey.forEach((rootURLOrId) => {
+                if (i == 0) {
+                    this.setBaseImageLayer(rootURLOrId);
+                } else {
+                    this.setOverlayImageLayer(rootURLOrId, Utils.uuidv4());
+                }
+                i++;
+            });
         } else {
-            const idxServiceUrl = Math.round(Math.random());
-            const dssUrl = DEFAULT_OPTIONS.surveyUrl[idxServiceUrl]
-
-            this.setBaseImageLayer(dssUrl);
+            this.setBaseImageLayer(options.survey);
         }
+    
         
         this.view.showCatalog(options.showCatalog);
 
@@ -420,8 +415,7 @@ export let Aladin = (function () {
     // access to WASM libraries
     Aladin.wasmLibs = {};
     Aladin.DEFAULT_OPTIONS = {
-        surveyUrl: ["https://alaskybis.u-strasbg.fr/DSS/DSSColor", "https://alasky.u-strasbg.fr/DSS/DSSColor"],
-        survey: "CDS/P/DSS2/color",
+        survey: "https://alasky.u-strasbg.fr/DSS/DSSColor",
         target: "0 +0",
         cooFrame: "J2000",
         fov: 60,
@@ -1716,9 +1710,11 @@ A.catalogFromSkyBot = function (ra, dec, radius, epoch, queryOptions, options, s
     return A.catalogFromURL(url, options, successCallback, false);
 };
 
-A.hipsDefinitionFromURL = function(url, successCallback) {
+/*A.hipsDefinitionFromURL = function(url, successCallback) {
     HiPSDefinition.fromURL(url, successCallback);
-};
+};*/
+
+import init, * as module from 'alv3';
 
 A.init = (async () => {
     const isWebGL2Supported = document
@@ -1727,7 +1723,7 @@ A.init = (async () => {
 
     // Check for webgl2 support
     if (isWebGL2Supported) {
-        const module = await import('./../../pkg-webgl2');
+        const wasm = await init();
         Aladin.wasmLibs.webgl = module;
     } else {
         // WebGL1 not supported

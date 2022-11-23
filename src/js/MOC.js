@@ -16,8 +16,6 @@ import { ALEvent } from "./events/ALEvent.js";
 
 export let MOC = (function() {
     let MOC = function(options) {
-        //this.order = undefined;
-
         this.uuid = Utils.uuidv4();
         this.type = 'moc';
 
@@ -27,7 +25,8 @@ export let MOC = (function() {
 
         this.color = options.color || Color.getNextColor();
         this.color = Color.standardizeColor(this.color);
-        
+        this.color = Color.hexToRgb(this.color);
+
         this.opacity = options.opacity || 1;
 
         this.opacity = Math.max(0, Math.min(1, this.opacity)); // 0 <= this.opacity <= 1

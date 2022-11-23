@@ -813,3 +813,37 @@ impl WebClient {
         Ok(moc.coverage_percentage() as f32)
     }
 }
+
+#[wasm_bindgen(js_name = "sum")]
+pub fn sum(values: &[u32]) -> Result<u32, JsValue> {
+    Ok(values.iter().sum())
+}
+
+
+use std::time::Duration;
+
+use futures::channel::mpsc;
+use futures::StreamExt;
+use wasm_futures_executor::ThreadPool;
+use web_sys::DedicatedWorkerGlobalScope;
+use wasm_bindgen::JsCast;
+#[wasm_bindgen]
+pub async fn launchThreads() -> Result<i32, JsValue> {
+    let pool = ThreadPool::max_threads().await?;
+    let (tx, mut rx) = mpsc::channel(10);
+    for i in 0..20 {
+        let mut tx_c = tx.clone();
+        pool.spawn_ok(async move {
+            let global = js_sys::global().unchecked_into::<DedicatedWorkerGlobalScope>();
+            al_core::log(&format!("Task {} running on {}", i, global.name()));
+            // Block worker
+            tx_c.start_send(i * i).unwrap();
+        });
+    }
+    drop(tx);
+    let mut i = 0;
+    while let Some(x) = rx.next().await {
+        i += x;
+    }
+    Ok(i)
+}

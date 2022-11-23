@@ -34,6 +34,7 @@ import { ALEvent } from "../events/ALEvent.js";
 import { CatalogSelector } from "./CatalogSelector.js";
 import { HiPSLayer } from "./HiPSLayer.js";
 import { Utils } from "../Utils.js";
+import $ from "jquery";
 
 export class Stack {
 

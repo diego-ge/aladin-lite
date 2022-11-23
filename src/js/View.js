@@ -47,6 +47,8 @@ import { Logger } from "./Logger.js";
 import { ALEvent } from "./events/ALEvent.js";
 import { HpxImageSurvey } from "./HpxImageSurvey.js";
 
+import $ from "jquery";
+
 export let View = (function () {
 
     /** Constructor */
@@ -61,9 +63,22 @@ export let View = (function () {
         // At this point, the view has been created so the image canvas too
         try {
             // Start our Rust application. You can find `WebClient` in `src/lib.rs`
-            // The Rust part should also create a new WebGL2 or WebGL1 context depending on the WebGL2 brower support.
-            const webglCtx = new WebGLCtx(Aladin.wasmLibs.webgl, this.aladinDiv.id);
+            // The Rust part should also create a new WebGL2 or WebGL1 context depending on the WebGL2 brower support
+            const module = Aladin.wasmLibs.webgl;
+
+            const webglCtx = new WebGLCtx(module, this.aladinDiv.id);
             this.aladin.webglAPI = webglCtx.webclient;
+
+            /*const worker = new Worker(new URL('./Worker.js', import.meta.url))
+
+            worker.onmessage = (e) => {
+                console.log("task finished", e)
+            };
+            // this is the WebAssembly.Memory, which defaults to shared
+            const mem = wasm.memory.buffer;
+            console.log(mem, this.aladin.webglAPI, wasm)
+            worker.postMessage({ mem: mem, webclient: this.aladin.webglAPI });*/
+            console.log("jfkjsdf", module.launchThreads())
 
             // Retrieve all the possible colormaps
             HpxImageSurvey.COLORMAPS = this.aladin.webglAPI.getAvailableColormapList();

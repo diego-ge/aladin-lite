@@ -87,6 +87,7 @@ export async function fetchSurveyProperties(rootURLOrId) {
             }
         }
     } else {
+        console.log("is url")
         // Fetch the properties of the survey
         let rootURL = rootURLOrId;
         // Use the url for retrieving the HiPS properties

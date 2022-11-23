@@ -1,5 +1,5 @@
 use wasm_bindgen::prelude::*;
-
+/*
 #[wasm_bindgen(raw_module = "../src/js/Color")]
 extern "C" {
     pub type Color;
@@ -7,6 +7,7 @@ extern "C" {
     #[wasm_bindgen(static_method_of = Color)]
     pub fn hexToRgb(hex: String) -> JsValue;
 }
+*/
 
 #[derive(Debug, Clone, Copy)]
 #[derive(Deserialize, Serialize)]
@@ -42,7 +43,6 @@ impl<'a> Mul<f32> for &'a ColorRGB {
         }
     }
 }
-
 
 /*
 #[wasm_bindgen]
