@@ -69,6 +69,8 @@ export let View = (function () {
             const webglCtx = new WebGLCtx(module, this.aladinDiv.id);
             this.aladin.webglAPI = webglCtx.webclient;
 
+            module.sum([0, 1, 2, 3, 6]);
+
             /*const worker = new Worker(new URL('./Worker.js', import.meta.url))
 
             worker.onmessage = (e) => {
@@ -78,7 +80,7 @@ export let View = (function () {
             const mem = wasm.memory.buffer;
             console.log(mem, this.aladin.webglAPI, wasm)
             worker.postMessage({ mem: mem, webclient: this.aladin.webglAPI });*/
-            console.log("jfkjsdf", module.launchThreads())
+            //console.log("jfkjsdf", module.launchThreads())
 
             // Retrieve all the possible colormaps
             HpxImageSurvey.COLORMAPS = this.aladin.webglAPI.getAvailableColormapList();

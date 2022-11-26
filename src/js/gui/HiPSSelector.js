@@ -20,7 +20,7 @@
 import { MocServer } from "../MocServer";
 import { Utils } from "../Utils";
 import  autocomplete from 'autocompleter';
-
+import $ from 'jquery';
 /******************************************************************************
  * Aladin Lite project
  * 

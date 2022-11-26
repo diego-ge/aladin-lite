@@ -815,20 +815,25 @@ impl WebClient {
 }
 
 #[wasm_bindgen(js_name = "sum")]
-pub fn sum(values: &[u32]) -> Result<u32, JsValue> {
-    Ok(values.iter().sum())
+pub fn sum(values: &[u32]) -> Result<(), JsValue> {
+    spawn(move || {
+        let sum: u32 = values.iter().sum();
+        al_core::log(&format!("SUM done on another worker: {:?}", sum));
+    });
+
+    Ok(())
 }
 
 
 use std::time::Duration;
-
+/*
 use futures::channel::mpsc;
 use futures::StreamExt;
 use wasm_futures_executor::ThreadPool;
 use web_sys::DedicatedWorkerGlobalScope;
 use wasm_bindgen::JsCast;
 #[wasm_bindgen]
-pub async fn launchThreads() -> Result<i32, JsValue> {
+pub async fn launch_threads() -> Result<i32, JsValue> {
     let pool = ThreadPool::max_threads().await?;
     let (tx, mut rx) = mpsc::channel(10);
     for i in 0..20 {
@@ -840,10 +845,38 @@ pub async fn launchThreads() -> Result<i32, JsValue> {
             tx_c.start_send(i * i).unwrap();
         });
     }
+
     drop(tx);
+
     let mut i = 0;
     while let Some(x) = rx.next().await {
         i += x;
     }
     Ok(i)
+}
+*/
+// A function imitating `std::thread::spawn`.
+pub fn spawn(f: impl FnOnce() + Send) -> Result<(), JsValue> {
+    let worker = web_sys::Worker::new("worker.js")?;
+    // Double-boxing because `dyn FnOnce` is unsized and so `Box<dyn FnOnce()>` is a fat pointer.
+    // But `Box<Box<dyn FnOnce()>>` is just a plain pointer, and since wasm has 32-bit pointers,
+    // we can cast it to a `u32` and back.
+    let ptr = Box::into_raw(Box::new(Box::new(f) as Box<dyn FnOnce()>));
+    let msg = js_sys::Array::new();
+    // Send the worker a reference to our memory chunk, so it can initialize a wasm module
+    // using the same memory.
+    msg.push(&wasm_bindgen::memory());
+    // Also send the worker the address of the closure we want to execute.
+    msg.push(&JsValue::from(ptr as u32));
+    worker.post_message(&msg)?;
+
+    Ok(())
+}
+
+#[wasm_bindgen]
+// This function is here for `worker.js` to call.
+pub fn worker_entry_point(addr: u32) {
+    // Interpret the address we were given as a pointer to a closure to call.
+    let closure = unsafe { Box::from_raw(addr as *mut Box<dyn FnOnce()>) };
+    (*closure)();
 }

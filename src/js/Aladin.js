@@ -1723,7 +1723,8 @@ A.init = (async () => {
 
     // Check for webgl2 support
     if (isWebGL2Supported) {
-        const wasm = await init();
+        await init();
+        console.log(module)
         Aladin.wasmLibs.webgl = module;
     } else {
         // WebGL1 not supported

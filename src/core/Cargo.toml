@@ -22,7 +22,7 @@ crate-type = ["cdylib"]
 futures = "0.3.12"
 js-sys = "0.3.47"
 wasm-bindgen-futures = "0.4.20"
-wasm-futures-executor = "0.2.0"
+#wasm-futures-executor = "0.2.0"
 cgmath = "*"
 cdshealpix = { package = "cdshealpix", git = 'https://github.com/cds-astro/cds-healpix-rust', branch = 'master' }
 moclib = { package = "moc", git = 'https://github.com/cds-astro/cds-moc-rust', branch = 'main' }
@@ -106,6 +106,7 @@ opt-level = 3
 debug = true
 debug-assertions = true
 overflow-checks = true
+lto = true
 panic = 'unwind'
 incremental = true
 codegen-units = 256
