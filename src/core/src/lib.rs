@@ -855,6 +855,13 @@ pub async fn launch_threads() -> Result<i32, JsValue> {
     Ok(i)
 }
 */
+/*
+#[wasm_bindgen(module = "js/worker.js")]
+extern "C" {
+    #[wasm_bindgen(catch, js_name = instantiateWorker)]
+    fn instantiate_worker();
+}
+*/
 // A function imitating `std::thread::spawn`.
 pub fn spawn(f: impl FnOnce() + Send) -> Result<(), JsValue> {
     let worker = web_sys::Worker::new("worker.js")?;
